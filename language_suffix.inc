@@ -1,21 +1,21 @@
 <?php
 
 /*
- * @file mvc_lang.inc
+ * @file language_suffix.inc
  * 
  * Implementation functions for language selector
  */
 
 // Divider used between path and language: node/44-eng could be node/44.en
-define('MVC_LANG_DIVIDER', '-');
-define('MVC_LANG_SUFFIX', ''); //'.php' or '.html'
+define('LANGUAGE_SUFFIX_DIVIDER', '-');
+define('LANGUAGE_SUFFIX_SUFFIX', ''); //'.php' or '.html'
 
 
 /*
  * Add prefix to path if it's not there already. use / in admin path
  */
 
-function mvc_lang_path_to_mvc($path, $lang) {
+function language_suffix_path_to_mvc($path, $lang) {
   $languages = language_list('enabled');
   $prefix = $lang->prefix;
   $incoming_path = $path;
@@ -27,11 +27,11 @@ function mvc_lang_path_to_mvc($path, $lang) {
   }
 
   /* TODO: set this character in a variable */
-  $divider = MVC_LANG_DIVIDER;
+  $divider = LANGUAGE_SUFFIX_DIVIDER;
   $divider_len = strlen($divider);
 
   // Clear the terminal suffix
-  $extra_suffix = MVC_LANG_SUFFIX;
+  $extra_suffix = LANGUAGE_SUFFIX_SUFFIX;
   if (substr($path, -1 * strlen($extra_suffix)) == $extra_suffix) {
     $path = substr($path, 0, strlen($path) - strlen($extra_suffix));
   }
@@ -73,18 +73,18 @@ function mvc_lang_path_to_mvc($path, $lang) {
  * Convert from /path/to/the/current/file-fra format to /path/to/the/current/file/fra
  */
 
-function mvc_lang_path_from_mvc($path, $languages) {
+function language_suffix_path_from_mvc($path, $languages) {
   if (!is_string($path) || empty($path)) {
     return FALSE;
   }
   $temp_path = $path;
 
   /* TODO: set this character in a variable */
-  $divider = MVC_LANG_DIVIDER;
+  $divider = LANGUAGE_SUFFIX_DIVIDER;
   $divider_len = strlen($divider);
 
   // Clear the terminal suffix
-  $extra_suffix = MVC_LANG_SUFFIX;
+  $extra_suffix = LANGUAGE_SUFFIX_SUFFIX;
   if (substr($path, -1 * strlen($extra_suffix)) == $extra_suffix) {
     $path = substr($path, 0, strlen($path) - strlen($extra_suffix));
   }
@@ -112,9 +112,9 @@ function mvc_lang_path_from_mvc($path, $languages) {
 /**
  * Figure out the language from the path
  */
-function mvc_lang_language_getter($languages) {
+function language_suffix_language_getter($languages) {
   //$qcache = $_GET['q'];
-  $parts = explode('/', mvc_lang_path_from_mvc($_GET['q'], $languages));
+  $parts = explode('/', language_suffix_path_from_mvc($_GET['q'], $languages));
   $suffix = end($parts);
   foreach ($languages as &$lang) {
     if ($lang->prefix == $suffix) {
@@ -141,7 +141,7 @@ function mvc_lang_language_getter($languages) {
 /**
  * Rewrite URLs - add prefix as the suffix when generating path aliases
  */
-function mvc_lang_url_rewriter(&$path, &$options) {
+function language_suffix_url_rewriter(&$path, &$options) {
   global $language;
 
   // Be sure to grab the url language if present and use it instead of the global language
@@ -157,7 +157,7 @@ function mvc_lang_url_rewriter(&$path, &$options) {
     if (strncmp($path, '<front>', 7) == 0) {
       $path = 'index';
     }
-    $path = mvc_lang_path_to_mvc($path, $lang);
+    $path = language_suffix_path_to_mvc($path, $lang);
   }
 
   // The secret to this whole function.  Set the alias flag so that url() doesn't
@@ -170,7 +170,7 @@ function mvc_lang_url_rewriter(&$path, &$options) {
 /**
  * Language switcher ties into Drupal standard switcher
  */
-function mvc_lang_language_switcher_url($type, $path) {
+function language_suffix_language_switcher_url($type, $path) {
   $languages = language_list('enabled');
   $links = array();
   $node_path = FALSE;
@@ -206,15 +206,15 @@ function mvc_lang_language_switcher_url($type, $path) {
     $temp_path = $path;
     if ($node_path) {
       $temp_path = $nid;
-      mvc_lang_get_translated_node_id($temp_path, $language->language);
+      language_suffix_get_translated_node_id($temp_path, $language->language);
       $temp_path = 'node/' . $temp_path;
     }
     else if ($view_node_path) {
       $temp_path = $nid;
-      mvc_lang_get_translated_node_id($temp_path, $language->language);
+      language_suffix_get_translated_node_id($temp_path, $language->language);
       $temp_path = $path_head . $temp_path;
     }
-    $temp_path = mvc_lang_path_to_mvc($temp_path, $language);
+    $temp_path = language_suffix_path_to_mvc($temp_path, $language);
 
     $query_values = drupal_get_query_parameters();
     
@@ -246,7 +246,7 @@ function mvc_lang_language_switcher_url($type, $path) {
  * IF $lang is NULL then set $nid to alternate language's nid
  * If $lang is a specific language set $nid to that language' nid
  */
-function mvc_lang_get_translated_node_id(&$nid, $lang = NULL) {
+function language_suffix_get_translated_node_id(&$nid, $lang = NULL) {
   if (empty($nid)) return;
   $temp_nid = $nid;
   $node = node_load($nid);

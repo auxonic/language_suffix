@@ -1,6 +1,6 @@
-name = MVC Language Selector
+name = Language Suffix Selector
 description = MVC requires language be selected via suffix rather than standard i18n prefex
 dependencies[] = menu_attributes
-package = Ideeclic
+package = Multilingual - Internationalization
 core = 7.x
-files[] = mvc_lang.module
+files[] = language_suffix.module
