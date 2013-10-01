@@ -1,0 +1,6 @@
+name = MVC Language Selector
+description = MVC requires language be selected via suffix rather than standard i18n prefex
+dependencies[] = menu_attributes
+package = Ideeclic
+core = 7.x
+files[] = mvc_lang.module

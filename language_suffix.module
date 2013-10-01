@@ -1,0 +1,68 @@
+<?php
+/**
+ * @file mvc_lang.module
+ * 
+ * Adds a language selector based on the suffix rather than the standard prefex. 
+ * Module is designed specifcally to work with VMC/MVC rules
+ */
+
+/**
+ * Implements hook_help().
+ */
+function mvc_lang_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#mvc_lang':
+      return t("When enabled this module will select the language based on a suffix rather than prefix.");
+  }
+}
+  
+/**
+* Implements hook_language_negotiation_info().
+*/
+function mvc_lang_language_negotiation_info() {
+ return array(
+    'mvc_language_provider' => array(
+      'callbacks' => array(
+        'language' => 'mvc_lang_language_getter',
+        'switcher' => 'mvc_lang_language_switcher_url',
+        'url_rewrite' => 'mvc_lang_url_rewriter',
+      ),
+      'file' => drupal_get_path('module', 'mvc_lang') . '/mvc_lang.inc',
+      'weight' => -10,
+      'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
+      'name' => t('MVC path suffix'),
+      'description' => t('Determine the country & language from the URL - path suffix.'),
+      /*'cache' => 1,*/
+    ),
+  );
+}
+/*
+/**
+ * Perform alterations on language providers.
+ * hook_language_negotiation_info_alter
+ *
+ * @param $language_providers
+ *   Array of language provider definitions.
+ */
+function mvc_lang_language_negotiation_info_alter(array &$language_providers) {
+  if (isset($language_providers['language-selection-page'])) {
+    $language_providers['language-selection-page']['callbacks']['switcher'] = 'mvc_lang_language_switcher_url';
+    $language_providers['language-selection-page']['callbacks']['url_rewrite'] = 'mvc_lang_url_rewriter';
+  }
+}
+
+
+/**
+ * Implements hook_language_switch_links_alter().
+ *
+ * Replaces links with pointers to translated versions of the content.
+ */
+/*
+function mvc_lang_language_switch_links_alter(array &$links, $type, $path) {
+  foreach ($links as $langcode => &$link_info) {
+    if (function_exists('mvc_text_lang_filter_quick_process') && !empty($link_info['attributes']['title'])) {
+      $link_info['attributes']['title'] = mvc_text_lang_filter_quick_process($link_info['attributes']['title'], TRUE);
+    }
+  }
+}*/
+
